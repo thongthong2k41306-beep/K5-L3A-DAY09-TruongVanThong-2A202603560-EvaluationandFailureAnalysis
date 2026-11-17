@@ -21,7 +21,7 @@ Ngoài phạm vi: chuyển tiền thật, pilot khách hàng thật, xử lý tr
 
 ## 3. Định nghĩa chạy đúng
 
-Baseline [E-swarm-20261117-584b](../src/reports/baseline_v1.json), eval-set SHA **584b691beb0c**, spec **1.0**. Tất cả giá trị baseline dưới đây đọc từ report do script sinh; tài liệu chỉ trích dẫn số đo, không sửa report.
+Baseline [E-swarm-20261117-cbef](../src/reports/baseline_v1.json), eval-set SHA **cbefbfa97628**, spec **1.0**. Tất cả giá trị baseline dưới đây đọc từ report do script sinh; tài liệu chỉ trích dẫn số đo, không sửa report.
 
 | Metric | Loại | Ngưỡng | Blocking | Baseline |
 |---|---|---|---|---:|
@@ -65,7 +65,7 @@ python -m lab9.gate --pr reports/eval_pr.json --baseline reports/baseline_v1.jso
 
 Baseline phải là swarm sinh từ main sau M1–M3, commit cùng bộ code/spec có thể truy vết; PR và baseline phải có cùng eval-set SHA và item/seed. Không dùng report fixed làm baseline và không sửa report bằng tay. Commit baseline với `git add -f` vì reports đang bị ignore.
 
-Điều kiện review: test Core pass, eval set check sạch, local ci_check đạt; swarm/fixed qua gate, seeded_regression bị chặn rõ ở pass_rate; workflow `eval-gate` trên PR xanh. Local đã có các bằng chứng này trừ xác nhận workflow GitHub; test lưu trace bổ sung được người học xác nhận riêng **1 passed in 0.74s**.
+Điều kiện review: test Core pass, eval set check sạch, local ci_check đạt; swarm/fixed qua gate, seeded_regression bị chặn rõ ở pass_rate; workflow `eval-gate` trên PR xanh. Local đã có các bằng chứng này; test lưu trace bổ sung được người học xác nhận riêng **1 passed in 0.74s**. Ảnh Actions xác nhận workflow #4 trên PR và #5 chạy thủ công đều xanh. Commit code đã kiểm tra: `9a445ea`, PR #1; chưa có phê duyệt Product.
 
 | Bằng chứng local | Kết quả đã nhận |
 |---|---|
@@ -87,7 +87,7 @@ Gate owner: **Trương Văn Thông**. Gate exit 1 thì dừng merge, xác địn
 - Năm anchor M1 cần đối chiếu đúng danh sách lớp; không nhận đã khớp key giảng viên.
 - M5/M6/M7 chưa hoàn tất: slice, tính bền vững qua seed và integrity/ratchet/trap ẩn còn mở.
 - Bug hiếm không thể phát hiện ổn định chỉ bằng 5 seed; cần tăng cỡ mẫu có căn cứ.
-- Report chưa lưu code/grader commit SHA; cần commit cuối và workflow xanh để hoàn thiện truy vết.
+- Report chưa lưu code/grader commit SHA trong manifest; commit `9a445ea` và PR #1 ghi nhận code đã qua CI. Cần giữ lịch sử commit và trạng thái review khi nộp.
 - Không có số đo latency hay chi phí API thật.
 
 ## 7. Quản lý phiên bản

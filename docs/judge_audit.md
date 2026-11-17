@@ -2,13 +2,13 @@
 
 ## Phương pháp và trạng thái kiểm chứng
 
-Nguồn: `src/data/eval/judge_tone_public.csv` và `judge_helpful_public.csv`. Đây là judge replay, không gọi model hay cần API key. Các số dưới đây tính từ nhãn CSV gốc, là kết quả kỳ vọng cần đối chiếu với output người học tự chạy; chưa tuyên bố test đã pass.
+Nguồn: `src/data/eval/judge_tone_public.csv` và `judge_helpful_public.csv`. Đây là judge replay, không gọi model hay cần API key. Các số dưới đây lấy từ nhãn CSV gốc và đã được đối chiếu với test/output người học tự chạy: M2 **17 passed**, tone PASS floors, helpful FAIL floors. CI Core sau đó đã xanh. Không có sửa đổi nhãn CSV.
 
 Quy ước **FAIL là lớp dương**: TP bắt đúng lỗi; FP báo lỗi trên câu người gán PASS; FN bỏ sót câu người gán FAIL; TN cùng PASS. P = TP/(TP+FP); R = TP/(TP+FN). Mẫu số P/R bằng 0 trả 0. Kappa so thỏa thuận quan sát với thỏa thuận ngẫu nhiên theo phân bố nhãn; kappa không xác định phải FAIL calibration.
 
 Giữ nguyên CSV để tái lập số tham chiếu. Kết luận audit/relabel là đề xuất, không sửa nhãn gốc âm thầm. Quyết định dùng số chưa làm tròn; làm tròn chỉ để hiển thị.
 
-## Kết quả kỳ vọng
+## Kết quả đã đối chiếu
 
 | Tiêu chí | n | TP | FP | FN | TN | κ | Precision | Recall | Floors κ≥0.6, P≥0.8, R≥0.7 | Quyết định |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -73,3 +73,7 @@ python -m lab9.judge --csv data/eval/judge_helpful_public.csv --audit 5
 ```
 
 Kỳ vọng: test M2 pass; tone in `PASS floors` và exit 0; helpful in `FAIL floors` và exit 1 (kết quả đúng yêu cầu, không phải lỗi cài đặt). Các test `paired_bootstrap` thuộc M4 nên chưa chạy ở bước M2. Cần lưu output thực tế sau khi người học chạy để xác nhận kết quả.
+
+## Xác nhận kiểm tra
+
+Người học đã gửi **17 passed, 2 deselected** cho nhóm test M2, output tone P=0.857/R=0.8/κ=0.757 và helpful FAIL floors. Test `test_judge_calibration_decisions` đã đối chiếu helpful TP=9/FP=0/FN=21/TN=70 và P=1/R=0.3/κ=0.375. Workflow eval-gate trên PR #1 cũng đã xanh; các lệnh trên được giữ lại để tái lập, không phải trạng thái chờ chạy.

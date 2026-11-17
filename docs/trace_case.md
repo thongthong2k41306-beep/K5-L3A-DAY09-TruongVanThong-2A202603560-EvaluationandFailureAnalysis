@@ -2,7 +2,7 @@
 
 ## Định danh và nguồn
 
-Trial lỗi **seeded_regression C-002@11**, run **R-seeded_regression-C-002-s11**, nằm ở row `E-002, seed=11` trong [report E-seeded_regression-20261117-584b](../src/reports/eval_seeded_regression.json). Đối chứng là **fixed C-002@11**, run **R-fixed-C-002-s11**, row tương ứng trong [eval_fixed.json](../src/reports/eval_fixed.json).
+Trial lỗi **seeded_regression C-002@11**, run **R-seeded_regression-C-002-s11**, nằm ở row `E-002, seed=11` trong [report E-seeded_regression-20261117-cbef](../src/reports/eval_seeded_regression.json). Đối chứng là **fixed C-002@11**, run **R-fixed-C-002-s11**, row tương ứng trong [eval_fixed.json](../src/reports/eval_fixed.json).
 
 Hai trace đã được người học sinh khi chạy eval. Bản sao nguyên nội dung được lưu để commit độc lập với thư mục runtime bị ignore:
 
@@ -86,3 +86,7 @@ Các lệnh cuối chạy agent trên store tạm, không phải thao tác đã 
 ## Giới hạn
 
 Một cặp trace không chứng minh mọi seed/model đều mắc hoặc hết lỗi. DbFactKept hiện dựa event model_override, nên quiet_override cần được hỗ trợ bằng outcome/proposal checks. Chưa có raw ledger snapshot lưu riêng để audit độc lập; có thể bổ sung output trace_case khi người học chạy. Case này không tự động được coi là một trong 5 anchor bắt buộc nếu chưa có danh sách anchor của lớp.
+
+## Trạng thái nộp hiện hành
+
+Report tham chiếu hiện dùng SHA **cbefbfa97628** sau chuẩn hóa newline. Regression test lưu trace được người học xác nhận **1 passed in 0.74s**. Các trace fixtures này giữ nguyên nội dung quan sát, không phải trace tự dựng. Có thêm [phiếu đọc 5 case public](m1_coding_sheet.md) để phân biệt lỗi đầu tiên và hậu quả; danh sách anchor bắt buộc của lớp vẫn cần giảng viên cung cấp.

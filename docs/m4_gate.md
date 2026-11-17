@@ -74,6 +74,10 @@ Cần stage/commit cả code, spec và tài liệu liên quan cùng các file ng
 
 ## Bằng chứng local đã nhận ngày 17/11/2026
 
-Người học đã tự chạy và gửi kết quả: 67 test M2–M4 pass; baseline E-swarm-20261117-584b sinh thành công; swarm PR và fixed gate exit 0; seeded_regression exit 1 với pass_rate Δ −0.271, CI [−0.500, −0.057]; ci_check exit 0. Các report local đã được đọc đối chiếu khi soạn eval card. Xem [eval_card.md](eval_card.md) để biết số đo và giới hạn.
+Người học đã tự chạy và gửi kết quả: 67 test M2–M4 pass; baseline E-swarm-20261117-cbef sinh thành công; swarm PR và fixed gate exit 0; seeded_regression exit 1 với pass_rate Δ −0.271, CI [−0.500, −0.057]; ci_check exit 0. Các report local đã được đọc đối chiếu khi soạn eval card. Xem [eval_card.md](eval_card.md) để biết số đo và giới hạn.
 
-Chưa xác nhận commit/push/PR hoặc workflow GitHub xanh. Test lưu trace được thêm sau suite 67 test đã được người học chạy riêng và xác nhận **1 passed in 0.74s**.
+Đã xác nhận code/report commit trên `starter/d09`, PR #1 và workflow #4 (PR synchronize), #5 (chạy thủ công) xanh theo ảnh người học gửi. Commit code đã qua CI: `9a445ea`. Test lưu trace được thêm sau suite 67 test đã được người học chạy riêng và xác nhận **1 passed in 0.74s**.
+
+## Bản sửa Windows/Linux đã xác nhận
+
+`sha12` chuẩn hóa CRLF→LF trước khi hash, SHA hiện hành **cbefbfa97628**. Test newline được người học chạy: **2 passed**. Baseline/fixed/seeded_regression đã sinh lại bằng script; fixed vẫn merge, seeded vẫn block đúng pass_rate. Không sửa tay report. `eval_pr.json` là output mỗi lượt CI; bản local cũ không được dùng làm bằng chứng hiện hành.

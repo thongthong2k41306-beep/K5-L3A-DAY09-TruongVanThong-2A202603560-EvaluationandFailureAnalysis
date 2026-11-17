@@ -42,4 +42,4 @@ python -m lab9.mutation --detect --spec config/metric_spec.yaml
 
 `--detect` dùng 14 item × 5 seed cho mỗi shape `seeded_regression` và `fixed`. Detection là tỷ lệ trial fail theo pass_rate được ít nhất một grader khác chỉ ra lỗi; false alarms là tỷ lệ trial fixed bị grader khác báo lỗi. Phải đạt **detection ≥80%, false alarms ≤10%, exit 0**. Lệnh này không cần gate/bootstrap M4, nhưng có tạo SQLite tạm và trace.
 
-Trạng thái: đã viết code và test, chưa chạy chương trình theo yêu cầu người học. Chưa ghi con số detection/false alarms thực đo; bổ sung sau khi nhận output. Lệnh tổng hợp toàn bộ Core trong README còn gồm các test M4 chưa hoàn thành, nên hiện chỉ chạy test M3 riêng.
+Trạng thái đã xác nhận từ output người học: **27 test M3 passed**, **detection 100.00%**, **false alarms 0.00%**. Nhóm test M2–M4 sau đó đạt 67 passed, test trace bổ sung đạt 1 passed; CI Core trên PR #1 đã xanh. Không suy ra kết quả trên variant ẩn từ các số public này.

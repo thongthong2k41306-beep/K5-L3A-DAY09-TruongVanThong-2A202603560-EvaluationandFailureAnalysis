@@ -3,18 +3,18 @@
 ## Định danh và nguồn bằng chứng
 
 - Người thực hiện/gate owner: **Trương Văn Thông**; ngày tổng hợp **17/11/2026** (Asia/Bangkok).
-- Eval set **v1**, SHA **584b691beb0c**, nguồn `lab8_public`; 14 item × 5 seed = 70 trial mỗi shape. Nhãn riêng: [labels_v1.json](../src/data/eval/labels_v1.json).
+- Eval set **v1**, SHA **cbefbfa97628**, nguồn `lab8_public`; 14 item × 5 seed = 70 trial mỗi shape. Nhãn riêng: [labels_v1.json](../src/data/eval/labels_v1.json).
 - Seeds: **11, 22, 33, 44, 55**; MockLLM; Python **3.13.15** theo manifest.
 - Spec: [metric_spec.yaml](../src/config/metric_spec.yaml), `metric_spec_version: "1.0"`. Baseline và candidate dùng chung spec và eval set.
-- Code/grader: working tree trên nhánh `main`, HEAD khi soạn tài liệu là `d1b9471`. Thay đổi Lab 9 chưa được gắn một commit cuối; **HEAD này không đại diện đầy đủ code đã chạy**. Manifest report hiện chưa ghi code/grader commit SHA; cần ghi commit cuối trong PR để truy vết.
+- Code/grader đã kiểm tra CI: commit **`9a445ea`** trên nhánh **`starter/d09`**, gồm bản sửa chuẩn hóa SHA. PR [#1](https://github.com/thongthong2k41306-beep/K5-L3A-Day09-TruongVanThong-Evaluation-and-Failure-Analysis/pull/1). Manifest chưa lưu code/grader SHA, nên đối chiếu commit qua Git và PR. Các chỉnh sửa tài liệu sau commit này không đổi code/grader hay report.
 - Số đo trong bảng lấy từ report do người học chạy script; kết luận gate/test lấy từ output người học gửi. Không sửa tay report.
 
 | Vai trò | Run ID | Report |
 |---|---|---|
-| Baseline | E-swarm-20261117-584b | [baseline_v1.json](../src/reports/baseline_v1.json) |
-| PR swarm kiểm tra tương đương | E-swarm-20261117-584b | [eval_pr.json](../src/reports/eval_pr.json) |
-| Bản sửa | E-fixed-20261117-584b | [eval_fixed.json](../src/reports/eval_fixed.json) |
-| Bản gài regression | E-seeded_regression-20261117-584b | [eval_seeded_regression.json](../src/reports/eval_seeded_regression.json) |
+| Baseline | E-swarm-20261117-cbef | [baseline_v1.json](../src/reports/baseline_v1.json) |
+| PR swarm kiểm tra tương đương | E-swarm-20261117-cbef | Log workflow PR #1; file eval_pr được CI sinh lại, không cần commit |
+| Bản sửa | E-fixed-20261117-cbef | [eval_fixed.json](../src/reports/eval_fixed.json) |
+| Bản gài regression | E-seeded_regression-20261117-cbef | [eval_seeded_regression.json](../src/reports/eval_seeded_regression.json) |
 
 Run ID của hai lần chạy swarm giống nhau vì định dạng hiện tại chỉ gồm shape/ngày/SHA rút gọn; phân biệt bằng đường dẫn report, không coi run ID là mã duy nhất của mọi lần chạy.
 
@@ -55,7 +55,7 @@ Người học xác nhận gate `swarm` và `fixed` trả **exit 0 — merge**; 
 exit 1 — blocked: refund_amount_correct, proposal_amount_correct, reply_amount_correct, pass_rate
 ```
 
-Baseline pass_rate tương ứng 69/70 trial, fixed 70/70, regression 50/70. Gate chặn regression đúng tham chiếu checkpoint. Local `ci_check` trả **exit 0 — baseline and spec look sound**; điều này chưa chứng minh workflow GitHub đã chạy xanh.
+Baseline pass_rate tương ứng 69/70 trial, fixed 70/70, regression 50/70. Gate chặn regression đúng tham chiếu checkpoint. Local `ci_check` trả **exit 0 — baseline and spec look sound**. Người học đã gửi ảnh xác nhận workflow **#4 (PR synchronize)** và **#5 (workflow_dispatch)** xanh trên nhánh starter/d09; xem [Actions](https://github.com/thongthong2k41306-beep/K5-L3A-Day09-TruongVanThong-Evaluation-and-Failure-Analysis/actions/workflows/eval-gate.yml).
 
 ## Judge và kiểm tra
 
@@ -84,8 +84,12 @@ Chỉ pilot **offline** cho các public claim LogiX-VN: giao trễ, hàng hỏng
 - M1 còn xác nhận 5 anchor bắt buộc; không tự nhận các case đã đọc chính là anchor của giảng viên.
 - M5–M7 chưa hoàn tất: chưa xác nhận slice, A/A trên seed khác, integrity/ratchet toàn diện hay trap ẩn.
 - Bug hiếm chỉ kích hoạt ở một phần nhỏ seed có thể không phát hiện ổn định với 5 seed. Không hạ ngưỡng chỉ để bắt một variant đã biết.
-- Chưa xác nhận commit/push/PR hoặc job `eval-gate` trên GitHub.
+- Baseline và hai report candidate đã commit; PR #1 và CI xanh đã được người học xác nhận bằng ảnh. M1 còn danh sách anchor chính thức; chưa có phê duyệt Product hoặc yêu cầu merge.
 
 ## Khi nào tăng phiên bản
 
 Thêm/bớt/thay nội dung item hoặc nhãn cần quản lý eval-set version và sinh lại baseline; mapping FM thay đổi cũng phải kiểm lại SHA. Thay grader, metric hoặc ngưỡng cần ghi phiên bản/commit và sinh lại report để so cùng thước đo. Cùng eval-set version chỉ siết ngưỡng; v2 cần baseline riêng, không thay thế baseline v1 âm thầm.
+
+## Ghi chú SHA trên Windows/Linux
+
+SHA hiện hành là **cbefbfa97628**, tính sau chuẩn hóa CRLF thành LF. SHA cũ `584b691beb0c` chỉ khác newline trước bản sửa; metric không đổi. Người học đã chạy lại baseline/fixed/seeded_regression bằng script, xác nhận test SHA **2 passed** và CI xanh. Không sửa tay report hay bỏ kiểm tra SHA. File `eval_pr.json` local cũ không thuộc bộ report nộp; CI luôn sinh mới trước khi gate.
