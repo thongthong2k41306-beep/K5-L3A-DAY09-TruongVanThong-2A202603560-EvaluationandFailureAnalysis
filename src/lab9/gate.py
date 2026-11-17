@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 from lab8.console import utf8_stdio
@@ -61,21 +62,37 @@ def check(pr: dict, base: dict, spec: dict, base_spec: dict | None = None) -> tu
         verdict, note = "ok", ""
         if val is None:
             verdict = "missing"
+        elif not isinstance(val, (int, float)) or not math.isfinite(val):
+            verdict, note = "fail", "invalid metric value"
         elif "max" in th and val > th["max"]:
             verdict = "fail"
         elif "min" in th and val < th["min"]:
             verdict = "fail"
-        elif "max_increase" in th and base["metrics"].get(mid):
-            if val > base["metrics"][mid] * (1 + th["max_increase"]):
+        elif "max_increase" in th:
+            base_val = base["metrics"].get(mid)
+            if base_val is None or not isinstance(base_val, (int, float)) or not math.isfinite(base_val):
+                verdict, note = "missing", "missing or invalid baseline metric"
+            elif val > base_val * (1 + th["max_increase"]):
                 verdict = "fail"
-        if th.get("no_significant_drop") and val is not None:
+        if th.get("no_significant_drop") and isinstance(val, (int, float)) and math.isfinite(val):
             a, b = per_item(pr, mid), per_item(base, mid)
-            keys = sorted(set(a) & set(b))
-            d, lo, hi = stats.paired_bootstrap([a[k] for k in keys], [b[k] for k in keys],
-                                               n_resamples=bs.get("n_resamples", 1000), rng=bs.get("rng", 2027))
-            note = f"Δ {d:+.3f} CI [{lo:+.3f}, {hi:+.3f}]"
-            if hi < 0:
-                verdict = "fail"
+            if not a or a.keys() != b.keys():
+                verdict, note = "fail", "cannot pair the same items with the baseline"
+            else:
+                keys = sorted(a)
+                try:
+                    if bs.get("method", "percentile") != "percentile":
+                        raise ValueError("M4 bootstrap method must be percentile")
+                    d, lo, hi = stats.paired_bootstrap(
+                        [a[k] for k in keys], [b[k] for k in keys],
+                        n_resamples=bs.get("n_resamples", 1000), rng=bs.get("rng", 2027),
+                        confidence=bs.get("confidence", 0.95),
+                    )
+                    note = f"Δ {d:+.3f} CI [{lo:+.3f}, {hi:+.3f}]"
+                    if hi < 0:
+                        verdict = "fail"
+                except ValueError as error:
+                    verdict, note = "fail", f"cannot bootstrap: {error}"
         if verdict != "ok" and m.get("blocking"):
             blocked.append(mid)
         label = {"ok": "ok", "missing": "MISSING"}.get(verdict, "BLOCK" if m.get("blocking") else "warn")
