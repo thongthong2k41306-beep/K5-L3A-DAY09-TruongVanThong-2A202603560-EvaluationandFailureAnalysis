@@ -40,7 +40,7 @@ Report được nộp: `src/reports/baseline_v1.json`, `eval_fixed.json`, `eval_
 - [x] M7 — người học xác nhận 73 test Advanced passed, baseline tự so sánh exit 0, cả 4 trap bị chặn, mutation score 3/3 và 0 báo nhầm; xem docs/m7_integrity.md.
 - [x] Eval set v2, nhãn riêng và baseline_v2 spec 2.1 đã được người học sinh bằng script.
 - [x] Mutation scorecard, A/A và traps đạt local theo kết quả người học xác nhận.
-- [ ] Kiểm lại Core sau thay gate M7, commit/push toàn bộ phần nâng cao và baseline_v2, xác nhận workflow eval-gate-v2 xanh.
+- [x] Kiểm lại Core sau thay gate M7, commit/push toàn bộ phần nâng cao và baseline_v2, xác nhận workflow eval-gate-v2 xanh.
 - [x] Eval card bổ sung kết quả M5/M6/M7 local, ngưỡng A/A, slice và giới hạn cỡ mẫu; trạng thái CI nâng cao còn chờ.
 
 CI Core xanh không chứng minh M5–M7 hoàn tất hoặc đã qua bộ chấm ẩn. Chưa có phê duyệt Product; đây là lab offline, không phải release chạy với khách hàng thật.
