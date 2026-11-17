@@ -82,11 +82,42 @@ Chỉ pilot **offline** cho các public claim LogiX-VN: giao trễ, hàng hỏng
 - Grader FM-08 hỗ trợ reply template có số tiền VND nguyên. Trace legacy không có reply được tính đúng rỗng; score 1.0 trên swarm không chứng minh reply đã được quan sát. Hội thoại tự do/multiple amounts cần contract rộng hơn.
 - `DbFactKept` bắt event override; variant âm thầm đổi DB có thể cần proposal/outcome grader để phát hiện.
 - M1 còn xác nhận 5 anchor bắt buộc; không tự nhận các case đã đọc chính là anchor của giảng viên.
-- M5–M7 chưa hoàn tất: chưa xác nhận slice, A/A trên seed khác, integrity/ratchet toàn diện hay trap ẩn.
+- M5/M6/M7 đã được xác nhận local trên public v2 (mục bên dưới). Còn kiểm lại Core, commit/push và xác nhận CI nâng cao; chưa có kết quả bộ chấm ẩn.
 - Bug hiếm chỉ kích hoạt ở một phần nhỏ seed có thể không phát hiện ổn định với 5 seed. Không hạ ngưỡng chỉ để bắt một variant đã biết.
 - Baseline và hai report candidate đã commit; PR #1 và CI xanh đã được người học xác nhận bằng ảnh. M1 còn danh sách anchor chính thức; chưa có phê duyệt Product hoặc yêu cầu merge.
 
-## Khi nào tăng phiên bản
+## Kết quả v2 — M5 đã xác nhận
+
+Nguồn: report do người học sinh bằng script, SHA v2 **c26ebe1e1abb**, spec 2.0, 28 item × 5 seed. Baseline **E-swarm-20261117-c26e**; fixed **E-fixed-20261117-c26e**; honest refactor **E-honest_refactor-20261117-c26e**; regression **E-slice_regression-20261117-c26e**. Cả bốn report không có evaluator failures. Người học chạy **12 test M5 passed**, checker v2 **0 problem**.
+
+| Metric / slice | Baseline | Fixed | Honest refactor | Slice regression |
+|---|---:|---:|---:|---:|
+| pass_rate tổng | 0.9786 | 1.0000 | 1.0000 | 0.9357 |
+| money_movement, 12 item | 1.0000 | 1.0000 | 1.0000 | **0.8500** |
+| adversarial, 14 item | 0.9714 | 1.0000 | 1.0000 | 0.9143 |
+| denial, 11 item | 0.9455 | 1.0000 | 1.0000 | 1.0000 |
+
+Baseline tự so sánh, fixed và honest_refactor đều exit 0. Regression chỉ bị chặn bởi **slice:money_movement/pass_rate**: tỷ lệ tiền 0.85 dưới floor 0.90 trong khi pass_rate tổng 0.9357 vẫn trên floor 0.85. Chưa có output CI chi tiết v2 được lưu trong hội thoại nên không tự ghi số CI. Xem [M5](m5_slices.md).
+
+Các số trên là kết quả M5 spec 2.0. M6 đã tăng spec lên 2.1 và người học sinh lại report với pass_at/pass_hat có giá trị thật; xem mục M6 bên dưới. Baseline_v2 giữ local đến khi M7 hoàn tất để tránh bật workflow nâng cao còn test TODO. Kết quả v1 và v2 dùng hai eval set riêng, không so trực tiếp các tỷ lệ như một phép paired test.
+
+## Kết quả v2 — M6 đã xác nhận
+
+Spec **2.1**, cùng eval set SHA **c26ebe1e1abb**. Người học xác nhận **28 test passed**. A/A so seed 11/22/33/44/55 với 66/77/88/99/110: mọi delta=0; pass_hat_5 cả hai bộ seed **0.8929**. Floor **0.85** dưới mức quan sát khoảng 0.0429; đây là margin trên MockLLM, không chứng minh nhiễu LLM thật bằng 0.
+
+Flaky report **E-flaky_regression-20261117-c26e** có pass_rate **0.9143**, pass_at_5 **1.0000**, pass_hat_5 **0.5714**. Gate chặn pass_rate (no_significant_drop), pass_hat_5, proposal_amount_correct và slice tiền. Người học xác nhận baseline tự so sánh/fixed/honest_refactor đều exit 0; slice_regression vẫn bị chặn ở money_movement. Xem [phân tích M6](m6_reliability.md).
+
+Giới hạn: chỉ hai bộ seed và 28 item public; chưa đủ suy ra dải nhiễu LLM thật hay xác suất bắt bug hiếm. Cần nhiều lần A/A và mẫu mới; kiểm tra M7 bên dưới chỉ cung cấp bằng chứng public local.
+
+## Kết quả v2 — M7 đã xác nhận local
+
+Người học xác nhận **73 test Advanced passed**, baseline tự so sánh qua gate, **4/4 trap public bị chặn**, mutation score **3/3 · false alarms 0**. Fixed/honest_refactor được merge; seeded/slice/flaky regression bị block. Snapshot ratchet: config/metric_spec_v2.baseline.yaml, spec 2.1; không nới threshold của M6.
+
+Integrity kiểm count/coverage/cặp item-seed trùng, grader errors cả run xanh, NaN/None, slice tag và summary so rows. Ratchet giữ metric/slice, blocking, bound và no_significant_drop khi có base-spec tin cậy. Không sửa variant/trap để đạt score.
+
+Đây là bằng chứng do người học chạy, chưa phải xác nhận workflow nâng cao xanh. Còn chạy kiểm tra Core sau thay gate, commit/push baseline_v2 cùng code/config/tests/docs/workflow và xem Checks. Giới hạn: report giả mạo nhất quán mọi row/summary hoặc sửa cả baseline/base-spec vẫn cần nguồn tin cậy và review; public trap score không đảm bảo hidden score. Xem [M7](m7_integrity.md).
+
+## Quy tắc tăng phiên bản
 
 Thêm/bớt/thay nội dung item hoặc nhãn cần quản lý eval-set version và sinh lại baseline; mapping FM thay đổi cũng phải kiểm lại SHA. Thay grader, metric hoặc ngưỡng cần ghi phiên bản/commit và sinh lại report để so cùng thước đo. Cùng eval-set version chỉ siết ngưỡng; v2 cần baseline riêng, không thay thế baseline v1 âm thầm.
 

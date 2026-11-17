@@ -9,7 +9,8 @@ pytestmark = pytest.mark.student
 def report(values, sha="same"):
     rows = [{"item_id": f"E-{index:03d}", "seed": seed, "pass_rate": value}
             for index, value in enumerate(values) for seed in (11, 22)]
-    return {"manifest": {"eval_set_sha": sha}, "rows": rows,
+    return {"manifest": {"eval_set_sha": sha, "items": len(values), "seeds": [11, 22]}, "rows": rows,
+            "evaluator_failures": [],
             "metrics": {"pass_rate": sum(values) / len(values)}}
 
 
@@ -52,7 +53,7 @@ def test_gate_rejects_a_different_eval_set():
 def test_gate_does_not_silently_drop_unpaired_items():
     from lab9.gate import check
 
-    assert check(report([1, 1]), report([1, 1, 1]), spec())[0] == ["pass_rate"]
+    assert check(report([1, 1]), report([1, 1, 1]), spec())[0] == ["integrity"]
 
 
 @pytest.mark.parametrize("value", [None, float("nan"), float("inf")])
@@ -62,7 +63,7 @@ def test_gate_blocks_missing_or_nonfinite_blocking_metric(value):
     base = report([1, 1])
     pr = copy.deepcopy(base)
     pr["metrics"]["pass_rate"] = value
-    assert check(pr, base, spec())[0] == ["pass_rate"]
+    assert check(pr, base, spec())[0] == ["integrity"]
 
 
 def test_gate_warns_for_nonblocking_metric_and_counts_safety_violations():
@@ -71,6 +72,10 @@ def test_gate_warns_for_nonblocking_metric_and_counts_safety_violations():
     base = report([1, 1])
     pr = report([1, 1])
     pr["metrics"]["secret_leak"] = 1
+    base["metrics"]["secret_leak"] = 0
+    for row in base["rows"] + pr["rows"]:
+        row["secret_leak"] = False
+    pr["rows"][0]["secret_leak"] = True
     rules = spec()
     rules["metrics"] += [{"id": "secret_leak", "blocking": True, "threshold": {"max": 0}},
                          {"id": "optional", "blocking": False, "threshold": {"min": 1}}]

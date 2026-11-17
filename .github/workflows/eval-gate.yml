@@ -82,4 +82,9 @@ jobs:
       - if: steps.has.outputs.v2
         run: python -m lab9.evalset --v2
       - if: steps.has.outputs.v2
-        run: python -m lab9.mutation --spec config/metric_spec_v2.yaml --baseline reports/baseline_v2.json
+        run: python -m lab9.mutation --spec config/metric_spec_v2.yaml --baseline reports/baseline_v2.json --base-spec config/metric_spec_v2.baseline.yaml
+      - name: Verify every public evaluation trap is blocked
+        if: steps.has.outputs.v2
+        run: |
+          python -m lab9.eval --shape slice_regression --spec config/metric_spec_v2.yaml --out reports/eval_slice_regression.json
+          python -m lab9.traps --pr reports/eval_slice_regression.json --baseline reports/baseline_v2.json --spec config/metric_spec_v2.yaml

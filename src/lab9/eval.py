@@ -126,7 +126,7 @@ def aggregate(rows: list[dict[str, Any]], metric_ids: list[str], k_values: list[
         by_item.setdefault(r["item_id"], []).append(bool(r.get("pass_rate")))
     out["pass_5"] = round(sum(all(v) for v in by_item.values()) / len(by_item), 4) if by_item else None
     # pass@k / pass^k (M6): mean over items of the unbiased per-item estimate.
-    # Left as None until stats.pass_at_k / stats.pass_hat_k are implemented.
+    # Fewer than k trials cannot estimate the corresponding probability.
     for k in k_values:
         for name, fn in (("pass_at", stats.pass_at_k), ("pass_hat", stats.pass_hat_k)):
             if not by_item or min(len(v) for v in by_item.values()) < k:
